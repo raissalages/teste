@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Promoções por Perto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+
+  <div class="max-w-xl w-full bg-white p-6 rounded-xl shadow-lg text-center">
+    <h1 class="text-3xl font-bold text-blue-600 mb-2">
+      <i class="fas fa-tags mr-2"></i> Promoções por Perto
+    </h1>
+    <p class="text-gray-600 mb-4">Veja ofertas perto de você!</p>
+
+    <p class="text-sm text-gray-500 mb-4">Número vinculado: <strong id="numero-user"></strong></p>
+
+    <button 
+      onclick="pedirLocalizacao()"
+      class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+    >
+      <i class="fas fa-location-arrow mr-2"></i> Usar minha localização
+    </button>
+
+    <div id="status" class="mt-6 text-gray-700 hidden">
+      <p><i class="fas fa-spinner fa-spin mr-2 text-blue-500"></i>Buscando promoções próximas...</p>
+    </div>
+
+    <div id="resultado" class="mt-6 hidden text-left">
+      <h2 class="text-xl font-semibold text-green-600 mb-2">Ofertas disponíveis:</h2>
+      <ul class="space-y-3" id="lista-promocoes">
+        <!-- promoções serão inseridas aqui -->
+      </ul>
+    </div>
+
+    <div id="erro" class="mt-6 text-red-600 font-medium hidden">
+      Não foi possível obter sua localização. Verifique as permissões do navegador.
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const numero = params.get("numero");
+    if (numero) {
+      document.getElementById("numero-user").textContent = numero;
+    }
+
+    const promocoesFicticias = [
+      { nome: "Lanchonete Sabor & Cia", oferta: "Combo X-Burger + Refri por R$ 19,90" },
+      { nome: "Loja Mania de Desconto", oferta: "Camisetas a partir de R$ 29,99" },
+      { nome: "Farmácia Preço Justo", oferta: "Até 50% de desconto em genéricos" }
+    ];
+
+    function pedirLocalizacao() {
+      document.getElementById("status").classList.remove("hidden");
+      document.getElementById("erro").classList.add("hidden");
+      document.getElementById("resultado").classList.add("hidden");
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            mostrarPromocoes(pos.coords.latitude, pos.coords.longitude);
+          },
+          (err) => {
+            document.getElementById("status").classList.add("hidden");
+            document.getElementById("erro").classList.remove("hidden");
+          }
+        );
+      } else {
+        document.getElementById("status").classList.add("hidden");
+        document.getElementById("erro").classList.remove("hidden");
+      }
+    }
+
+    function mostrarPromocoes(lat, lng) {
+      document.getElementById("status").classList.add("hidden");
+      document.getElementById("resultado").classList.remove("hidden");
+
+      const lista = document.getElementById("lista-promocoes");
+      lista.innerHTML = "";
+
+      // aqui você pode usar lat/lng futuramente para personalizar
+      promocoesFicticias.forEach(promo => {
+        const li = document.createElement("li");
+        li.classList.add("bg-gray-100", "p-3", "rounded-lg");
+        li.innerHTML = `<strong>${promo.nome}</strong><br><span class="text-sm text-gray-600">${promo.oferta}</span>`;
+        lista.appendChild(li);
+      });
+    }
+  </script>
+
+</body>
+</html>
