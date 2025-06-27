@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Enviar Promoções</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -13,7 +13,7 @@
     <p class="text-gray-600 mb-4">Insira o número da pessoa que receberá as promoções:</p>
 
     <input type="text" id="numero" placeholder="Ex: 5511999999999"
-           class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4">
+           class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4" />
 
     <button onclick="gerarLink()" 
             class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition w-full">
@@ -34,7 +34,10 @@
         alert("Por favor, insira um número.");
         return;
       }
-      const url = `${window.location.origin}/promocoes.html?numero=${encodeURIComponent(numero)}`;
+
+      const repoName = 'promocoes-localizacao'; // substitua pelo nome do seu repositório no GitHub
+      const url = `${window.location.origin}/${repoName}/promocoes.html?numero=${encodeURIComponent(numero)}`;
+      
       document.getElementById("linkGerado").href = url;
       document.getElementById("linkGerado").textContent = url;
       document.getElementById("linkContainer").classList.remove("hidden");
